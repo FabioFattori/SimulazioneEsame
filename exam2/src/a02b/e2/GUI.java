@@ -8,11 +8,11 @@ import java.awt.event.ActionListener;
 public class GUI extends JFrame {
 
     private Controller gameController;
-    private final HashMap<Pair<Integer, Integer>, JButton> map;
+    private final Map<Pair<Integer, Integer>, JButton> map;
 
-    public GUI(int size) {
+    public GUI(int size,String goRightSymbol,String goLeftSymbol) {
 
-        this.gameController = new GameController(size);
+        this.gameController = new GameController(size,goRightSymbol,goLeftSymbol);
         this.gameController.populateGamingField();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setSize(50 * size, 50 * size);
@@ -21,7 +21,7 @@ public class GUI extends JFrame {
         this.getContentPane().add(panel);
 
         ActionListener al = e -> {
-            this.gameController.togleBtn();
+            this.gameController.movePlayer();
             if (this.gameController.checkGameEnd()) {
                 this.dispose();
             } else {

@@ -1,17 +1,17 @@
 package a02b.e2;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public interface Controller {
-    public void togleBtn();
+    void movePlayer();
 
-    public void populateGamingField();
+    void populateGamingField();
 
-    public Pair<Integer, Integer> getPlayerPosition();
+    Pair<Integer, Integer> getPlayerPosition();
 
-    public Pair<Integer, Integer> getOldPlayerPosition();
+    Pair<Integer, Integer> getOldPlayerPosition();
 
-    public HashMap<Pair<Integer, Integer>, String> getLettersPosition();
+    Map<Pair<Integer, Integer>, String> getLettersPosition();
 
-    public boolean checkGameEnd();
+    boolean checkGameEnd();
 }

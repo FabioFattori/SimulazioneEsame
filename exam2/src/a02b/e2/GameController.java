@@ -1,20 +1,25 @@
 package a02b.e2;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class GameController implements Controller {
 
     private final int size;
     private Pair<Integer, Integer> direction;
     private Pair<Integer, Integer> currentPlayerPosition;
-    private HashMap<Pair<Integer, Integer>, String> lettersPositions;
-    private boolean playerGotStock;
+    private Map<Pair<Integer, Integer>, String> letterePositions;
+    private boolean playerGotStuck;
+    private final String goLeftSymbol;
+    private final String goRightSymbol;
 
-    public GameController(final int size) {
+    public GameController(final int size, final String goRightSymbol, final String goLeftSymbol) {
         this.size = size;
         this.direction = new Pair<Integer, Integer>(-1, 0);
-        lettersPositions = new HashMap<>();
-        playerGotStock = false;
+        letterePositions = new HashMap<>();
+        playerGotStuck = false;
+        this.goLeftSymbol = goLeftSymbol;
+        this.goRightSymbol = goRightSymbol;
     }
 
     private boolean checkCoorValidity(Pair<Integer, Integer> coor) {
@@ -22,8 +27,8 @@ public class GameController implements Controller {
     }
 
     private boolean changeDirectionIfTheresNeedTo(Pair<Integer, Integer> coor) {
-        if (this.lettersPositions.containsKey(coor)) {
-            if (this.lettersPositions.get(coor) == "R") {
+        if (this.letterePositions.containsKey(coor)) {
+            if (this.letterePositions.get(coor).equals(this.goRightSymbol)) {
                 this.direction = new Pair<Integer, Integer>(0, 1);
             } else {
                 this.direction = new Pair<Integer, Integer>(0, -1);
@@ -35,19 +40,19 @@ public class GameController implements Controller {
     }
 
     @Override
-    public void togleBtn() {
+    public void movePlayer() {
         Pair<Integer, Integer> toCheck;
         int loopCounter = 0;
-        
-        do {
-             toCheck= new Pair<Integer, Integer>(
-                this.direction.getX() + this.currentPlayerPosition.getX(),
-                this.direction.getY() + this.currentPlayerPosition.getY());
-                loopCounter ++;
-        } while (changeDirectionIfTheresNeedTo(toCheck) || loopCounter >=3);
 
-        if(loopCounter >= 3){
-            playerGotStock = true;
+        do {
+            toCheck = new Pair<Integer, Integer>(
+                    this.direction.getX() + this.currentPlayerPosition.getX(),
+                    this.direction.getY() + this.currentPlayerPosition.getY());
+            loopCounter++;
+        } while (changeDirectionIfTheresNeedTo(toCheck) || loopCounter >= 3);
+
+        if (loopCounter >= 3) {
+            playerGotStuck = true;
         }
 
         this.currentPlayerPosition = new Pair<Integer, Integer>(
@@ -62,8 +67,8 @@ public class GameController implements Controller {
     }
 
     @Override
-    public HashMap<Pair<Integer, Integer>, String> getLettersPosition() {
-        return this.lettersPositions;
+    public Map<Pair<Integer, Integer>, String> getLettersPosition() {
+        return this.letterePositions;
     }
 
     @Override
@@ -76,9 +81,9 @@ public class GameController implements Controller {
             do {
                 toCheck = new Pair<Integer, Integer>((int) Math.floor(Math.random() * (size - 1)),
                         (int) Math.floor(Math.random() * (size - 1)));
-            } while (this.lettersPositions.containsKey(toCheck));
+            } while (this.letterePositions.containsKey(toCheck));
 
-            this.lettersPositions.put(toCheck, (i % 2 == 0) ? "R" : "L");
+            this.letterePositions.put(toCheck, (i % 2 == 0) ? this.goRightSymbol : this.goLeftSymbol);
         }
 
     }
@@ -91,7 +96,7 @@ public class GameController implements Controller {
 
     @Override
     public boolean checkGameEnd() {
-        return !checkCoorValidity(this.currentPlayerPosition)||playerGotStock;
+        return !checkCoorValidity(this.currentPlayerPosition) || playerGotStuck;
     }
 
 }
